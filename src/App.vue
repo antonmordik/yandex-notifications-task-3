@@ -21,7 +21,7 @@ export default {
   beforeCreate() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
-        .register('/sw.js')
+        .register('/yandex-notifications-api/sw.js')
         .then(registration => {
           console.log('Service worker зарегистрирован:', registration);
         })

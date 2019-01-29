@@ -1,10 +1,10 @@
 const version = 'v1';
 const files = [
-  '/',
-  '/index.html',
-  '/dist/',
-  '/build.js',
-  '/build.js.map'
+  '/yandex-notifications-api/',
+  '/yandex-notifications-api/index.html',
+  '/yandex-notifications-api/dist/',
+  '/yandex-notifications-api/build.js',
+  '/yandex-notifications-api/build.js.map'
   ];
 
 self.addEventListener('install', event => {
