@@ -1,8 +1,9 @@
 const version = 'v1';
 const files = [
-  '/yandex-notifications-api/index.html',
-  '/yandex-notifications-api/dist/build.js',
-  '/yandex-notifications-api/dist/build.js.map'
+  './',
+  './index.html',
+  './dist/build.js',
+  './dist/build.js.map'
   ];
 
 self.addEventListener('install', event => {
@@ -21,7 +22,7 @@ self.addEventListener('activate', event => {
   console.log('activating sw.js');
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      return Promise.all(cacheNames.forEach(name => {
+      return Promise.all(cacheNames.map(name => {
         if (name !== version) {
           console.log('removing files from cache');
           return caches.delete(name);
@@ -33,4 +34,14 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   console.log('fetching url: ', event.request.url);
+  event.respondWith(caches.match(event.request)
+    .then(cacheResponse => {
+      if (cacheResponse) {
+        console.log('found in cache');
+        return cacheResponse;
+      }
+
+      fetch(event.request)
+    })
+  );
 })
