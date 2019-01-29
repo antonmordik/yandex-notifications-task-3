@@ -1,0 +1,12 @@
+[
+  {
+    "title": "JavaScript conference",
+    "description": "Main theme: blockchain in js, speakers: Ilon Mask",
+    "date": "2019-0-22"
+  },
+  {
+    "title": "C++ conference",
+    "description": "Main theme: blockchain in c++, speakers: Ilon Mask",
+    "date": "2019-0-31"
+  }
+  ]
