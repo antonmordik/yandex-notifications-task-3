@@ -1,10 +1,10 @@
 const version = 'v1';
 const files = [
-  './',
-  './index.html',
-  './dist/',
-  './build.js',
-  './build.js.map'
+  '/',
+  '/index.html',
+  '/dist/',
+  '/build.js',
+  '/build.js.map'
   ];
 
 self.addEventListener('install', event => {
