@@ -26,7 +26,7 @@ export default {
           console.log('Service worker зарегистрирован:', registration);
         })
         .catch(err => {
-          console.log('Ошибка при регистрации service worker-а:', error);
+          console.log('Ошибка при регистрации service worker-а:', err);
         })
     } else {
       console.log('Текущий браузер не поддерживает service worker-ы');
