@@ -15,4 +15,4 @@ npm run dev
 npm run build
 ```
 
-[Click here](http://vuejs.github.io/vue-loader) for demonstration.
+[Click here](https://modrix.github.io/yandex-notifications-task-3/) for demonstration.
