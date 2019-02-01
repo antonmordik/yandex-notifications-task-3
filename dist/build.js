@@ -523,6 +523,21 @@ module.exports = function normalizeComponent (
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -534,8 +549,32 @@ module.exports = function normalizeComponent (
   },
   data() {
     return {
-      list: []
+      list: [],
+      today: [],
+      start: 0
     };
+  },
+  computed: {
+    listShow() {
+      return this.list.slice(this.start * 10, this.start * 10 + 10);
+    },
+    end() {
+      return Math.floor(this.list.length / 10);
+    }
+  },
+  methods: {
+    back() {
+      this.list = __WEBPACK_IMPORTED_MODULE_1__json_events_json___default.a;
+      if (this.start > 0) {
+        this.start -= 1;
+      }
+    },
+    next() {
+      this.list = __WEBPACK_IMPORTED_MODULE_1__json_events_json___default.a;
+      if (this.start < this.end) {
+        this.start += 1;
+      }
+    }
   },
   beforeCreate() {
     if ('serviceWorker' in navigator) {
@@ -549,7 +588,35 @@ module.exports = function normalizeComponent (
     }
   },
   created() {
-    this.list = __WEBPACK_IMPORTED_MODULE_1__json_events_json___default.a;
+    if (!('Notification' in window)) {
+      console.log('Ваш браузер не поддерживает уведомления');
+    } else if (Notification.permission === 'granted') {
+      this.list = __WEBPACK_IMPORTED_MODULE_1__json_events_json___default.a;
+      this.list = this.list.filter(el => new Date() < new Date(el.startDate.split('-')));
+      const now = new Date();
+      const nowStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      let notifications = localStorage.getItem('notifications');
+      if (!notifications) {
+        notifications = {};
+      } else {
+        notifications = JSON.parse(notifications);
+      }
+      if (notifications[nowStr]) {
+        notifications[nowStr].forEach((el, index) => {
+          setTimeout(() => {
+            const notification = new Notification(el.name, {
+              body: `${el.country} ${el.city} - ${el.date}`,
+              icon: __webpack_require__(20)
+            });
+            setTimeout(notification.close.bind(notification), 3800);
+          }, index * 4000);
+        });
+      }
+    } else if (Notification.permission !== 'denied' || Notification.permission === 'default') {
+      Notification.requestPermission();
+      this.list = __WEBPACK_IMPORTED_MODULE_1__json_events_json___default.a;
+      this.list = this.list.filter(el => new Date() < new Date(el.startDate.split('-')));
+    }
   }
 });
 
@@ -583,14 +650,53 @@ module.exports = function normalizeComponent (
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Conf',
   props: ['conf'],
   computed: {
     dateView() {
-      const [d, m, y] = this.conf.date.split('-');
-      return `${d}/${parseInt(m) + 1}/${y}`;
+      const [y, m, d] = this.conf.startDate.split('-');
+      return `${d}/${m}/${y}`;
+    }
+  },
+  methods: {
+    notify(amount) {
+      let [y, m, d] = this.conf.startDate.split('-');
+      const day = new Date(y, `${m - 1}`, `${d - amount}`);
+      const dayStr = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+      const data = {
+        name: this.conf.name,
+        country: this.conf.country,
+        city: this.conf.city,
+        date: this.dateView
+      };
+      let check = true;
+      let notifications = localStorage.getItem('notifications');
+      if (!notifications) {
+        notifications = {};
+      } else {
+        notifications = JSON.parse(notifications);
+      }
+      if (!notifications[dayStr]) {
+        notifications[dayStr] = [];
+      } else {
+        notifications[dayStr].forEach(el => {
+          const temp = JSON.stringify(el);
+          if (temp === JSON.stringify(data)) {
+            check = false;
+          }
+        });
+      }
+      if (check) {
+        notifications[dayStr].push(data);
+      }
+      localStorage.setItem('notifications', JSON.stringify(notifications));
     }
   }
 });
@@ -12135,7 +12241,7 @@ process.umask = function() { return 0; };
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(4);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d764f340_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bab39c96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(21);
 function injectStyle (ssrContext) {
   __webpack_require__(12)
 }
@@ -12155,7 +12261,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d764f340_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bab39c96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -12176,7 +12282,7 @@ var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("19aa8f98", content, true, {});
+var update = __webpack_require__(2)("b894f54a", content, true, {});
 
 /***/ }),
 /* 13 */
@@ -12184,10 +12290,10 @@ var update = __webpack_require__(2)("19aa8f98", content, true, {});
 
 exports = module.exports = __webpack_require__(1)(false);
 // imports
-
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Roboto);", ""]);
 
 // module
-exports.push([module.i, "*{padding:0;margin:0}#app{font-family:Avenir,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#2c3e50;margin:auto;margin-top:60px;display:grid;width:700px;grid-template-columns:1fr}h1,h2{font-weight:400}", ""]);
+exports.push([module.i, "*{padding:0;margin:0;outline:none}#app{font-family:Avenir,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#2c3e50;margin:auto;margin-top:20px;display:grid;width:500px;grid-template-columns:1fr}.navigation{width:150px;height:50px;display:grid;grid-template-columns:repeat(3,50px);margin:auto}a{color:#ed1e79}h1{text-align:center}.back,.next{cursor:pointer;background-color:#fff;border:none}.back,.current,.next{align-self:center;justify-self:center;padding:10px 12px}.back:hover,.next:hover{background-color:#ed1e79}", ""]);
 
 // exports
 
@@ -12232,7 +12338,7 @@ module.exports = function listToStyles (parentId, list) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Conf_vue__ = __webpack_require__(5);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4c5070f9_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Conf_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f80cc6c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Conf_vue__ = __webpack_require__(18);
 function injectStyle (ssrContext) {
   __webpack_require__(16)
 }
@@ -12252,7 +12358,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Conf_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4c5070f9_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Conf_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f80cc6c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Conf_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -12273,7 +12379,7 @@ var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("79c78784", content, true, {});
+var update = __webpack_require__(2)("4585f533", content, true, {});
 
 /***/ }),
 /* 17 */
@@ -12284,7 +12390,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".conf{width:700px;display:grid;grid-template-columns:1fr 52px 52px 52px;margin-bottom:20px}.conf__title{background-color:#9abd97}.conf__desc,.conf__title{grid-column:1/5;padding:15px}.conf__desc{background-color:#b6d7b9}.conf__date{background-color:#d0f1bf;display:grid}.conf__date p{align-self:center;padding-left:15px}.icon{background-color:#d0f1bf;border:none;width:52px;height:52px;cursor:pointer}.icon:hover{background-color:#b6d7b9}", ""]);
+exports.push([module.i, ".conf{width:500px;margin-bottom:20px;display:grid;grid-template-columns:400px 100px}.link,.place{grid-column:1/3}.allerts,.allerts_btn{font-size:14px}.allerts_btn{border:none;padding:5px 10px;cursor:pointer;background-color:#ed1e79;color:#fff}.allerts_btn:hover{color:#2c3e50}", ""]);
 
 // exports
 
@@ -12294,7 +12400,7 @@ exports.push([module.i, ".conf{width:700px;display:grid;grid-template-columns:1f
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"conf"},[_c('div',{staticClass:"conf__title"},[_vm._v("\n    "+_vm._s(_vm.conf.title)+"\n  ")]),_vm._v(" "),_c('div',{staticClass:"conf__desc"},[_vm._v("\n    "+_vm._s(_vm.conf.description)+"\n  ")]),_vm._v(" "),_c('div',{staticClass:"conf__date"},[_c('p',[_vm._v("\n      "+_vm._s(_vm.dateView)+"\n    ")])]),_vm._v(" "),_c('button',{staticClass:"icon"},[_vm._v("\n    3d\n  ")]),_vm._v(" "),_c('button',{staticClass:"icon"},[_vm._v("\n    7d\n  ")]),_vm._v(" "),_c('button',{staticClass:"icon"},[_vm._v("\n    14d\n  ")])])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"conf"},[_c('h3',{staticClass:"name"},[_vm._v("\n    "+_vm._s(_vm.conf.name)+"\n  ")]),_vm._v(" "),_c('p',{staticClass:"date"},[_vm._v("\n    "+_vm._s(_vm.dateView)+"\n  ")]),_vm._v(" "),_c('div',{staticClass:"link"},[_c('a',{attrs:{"href":_vm.conf.url,"target":"_blank"}},[_vm._v(_vm._s(_vm.conf.url))])]),_vm._v(" "),_c('p',{staticClass:"place"},[_vm._v("\n    "+_vm._s(_vm.conf.country)+", "+_vm._s(_vm.conf.city)+"\n  ")]),_vm._v(" "),_c('div',{staticClass:"allerts"},[_vm._v("\n    Напомнить:\n    "),_c('button',{staticClass:"allerts_btn",on:{"click":function($event){_vm.notify(3)}}},[_vm._v("\n      за 3 дня\n    ")]),_vm._v(" "),_c('button',{staticClass:"allerts_btn",on:{"click":function($event){_vm.notify(7)}}},[_vm._v("\n      за 7 дней\n    ")]),_vm._v(" "),_c('button',{staticClass:"allerts_btn",on:{"click":function($event){_vm.notify(14)}}},[_vm._v("\n      за 14 дней\n    ")])])])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -12303,14 +12409,20 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* 19 */
 /***/ (function(module, exports) {
 
-module.exports = [{"title":"JavaScript conference","description":"Main theme: blockchain in js, speakers: Ilon Mask","date":"2019-0-22"},{"title":"C++ conference","description":"Main theme: blockchain in c++, speakers: Ilon Mask","date":"2019-0-31"}]
+module.exports = [{"name":"ngAtlanta","url":"http://ng-atl.org","startDate":"2019-01-09","endDate":"2019-01-12","city":"Atlanta","country":"U.S.A.","twitter":"@NgAtlanta"},{"name":"Covalence","url":"http://www.covalenceconf.com","startDate":"2019-01-16","endDate":"2019-01-16","city":"San Francisco","country":"U.S.A.","twitter":"@covalenceconf"},{"name":"ForwardJS","url":"https://forwardjs.com","startDate":"2019-01-24","endDate":"2019-01-24","city":"San Francisco, CA","country":"U.S.A.","twitter":"@forwardjs"},{"name":"React Iran","url":"http://reactiran.com","startDate":"2019-01-31","endDate":"2019-01-31","city":"Tehran","country":"Iran"},{"name":"FFS Conf Down Under","url":"https://ffsconfdownunder.com","startDate":"2019-02-02","endDate":"2019-02-02","city":"Melbourne","country":"Australia","twitter":"@ffscondownunder"},{"name":"c't <webdev>","url":"https://ctwebdev.de","startDate":"2019-02-06","endDate":"2019-02-08","city":"Köln","country":"Germany","twitter":"@heiseonline","cfpUrl":"https://ctwebdev.de/international.html","cfpEndDate":"2018-08-31"},{"name":"Pause Fest","url":"https://pausefest.com.au/","startDate":"2019-02-06","endDate":"2019-02-08","city":"Melbourne","country":"Australia","twitter":"@pausefest"},{"name":"JSConf Hawaii","url":"https://www.jsconfhi.com","startDate":"2019-02-07","endDate":"2019-02-08","city":"Hawaiʻi","country":"U.S.A.","twitter":"@jsconfhi","cfpUrl":"https://www.jsconfhi.com/call-for-speakers/","cfpEndDate":"2018-08-10"},{"name":"FrontFest","url":"https://frontfest.es","startDate":"2019-02-09","endDate":"2019-02-09","city":"Madrid","country":"Spain","twitter":"@frontfest","cfpUrl":"https://frontfest.es/","cfpEndDate":"2018-11-11"},{"name":"Frontend Developer Love","url":"http://www.frontenddeveloperlove.com/","startDate":"2019-02-13","endDate":"2019-02-15","city":"Amsterdam","country":"Netherlands","twitter":"@frontend_love"},{"name":"Vue.js Amsterdam","url":"https://www.vuejs.amsterdam","startDate":"2019-02-14","endDate":"2019-02-15","city":"Amsterdam","country":"Netherlands","twitter":"@vuejsamsterdam"},{"name":"Agent Conf","url":"https://www.agent.sh","startDate":"2019-02-21","endDate":"2019-02-24","city":"Dornbirn & Lech","country":"Austria","twitter":"@AgentConf"},{"name":"ng-India","url":"https://www.ng-ind.com","startDate":"2019-02-23","endDate":"2019-02-23","city":"Gurgaon","country":"India"},{"name":"ReactFoo","url":"https://reactfoo.in/2019","startDate":"2019-03-01","endDate":"2019-03-02","city":"Bengaluru","country":"India","twitter":"@ReactFoo","cfpUrl":"https://reactfoo.talkfunnel.com/2019/","cfpEndDate":"2018-10-15"},{"name":"JS Kongress","url":"https://js-kongress.com","startDate":"2019-03-11","endDate":"2019-03-12","city":"Munich","country":"Germany","twitter":"@JSKongress","cfpUrl":"https://medium.com/@jskongress/we-want-you-for-the-r-evolution-of-architectures-b7a7d40cddd5","cfpEndDate":"2018-10-14"},{"name":"EmberConf","url":"http://emberconf.com","startDate":"2019-03-18","endDate":"2019-03-20","city":"Portland, OR","country":"U.S.A.","twitter":"@EmberConf"},{"name":"UpFront","url":"http://upfrontconf.com","startDate":"2019-03-22","city":"Manchester","country":"U.K.","twitter":"@upfrontconf"},{"name":"VueConf US","url":"http://us.vuejs.org","startDate":"2019-03-25","endDate":"2019-03-27","city":"Tampa, FL","country":"U.S.A.","twitter":"@VueConf.US","cfpUrl":"http://us.vuejs.org/call-for-papers/","cfpEndDate":"2018-11-01"},{"name":"Typeof Conference","url":"https://typeofconf.com","startDate":"2019-03-27","endDate":"2019-03-29","city":"Porto","country":"Portugal","twitter":"@typeofconf"},{"name":"Reactathon","url":"https://www.reactathon.com","startDate":"2019-03-30","endDate":"2019-03-31","city":"San Francisco, CA","country":"U.S.A.","twitter":"@reactathon","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSf3gtpQkYb2SNNI2WxBTC2rFYpFUn6cyMA9k8HZVZrwg0gYVw/viewform?usp=sf_link","cfpEndDate":"2019-01-15"},{"name":"FrontEnd Fest","url":"https://frontendfest.io/conference/chicago/2019/04/home","startDate":"2019-04-01","endDate":"2019-04-03","city":"Chicago, IL","country":"U.S.A.","cfpUrl":"https://frontendfest.io/home/speaker_request"},{"name":"#PerfMatters","url":"https://perfmattersconf.com","startDate":"2019-04-02","endDate":"2019-04-03","city":"Redwood City, CA","country":"U.S.A.","twitter":"@perfmattersconf","cfpUrl":"https://perfmattersconf.com/speak/","cfpEndDate":"2018-11-15"},{"name":"Frontend NE","url":"https://2019.frontendne.co.uk","startDate":"2019-04-03","endDate":"2019-04-03","city":"Newcastle","country":"U.K.","twitter":"@frontendne","cfpUrl":"https://2019.frontendne.co.uk/call-for-speakers.html"},{"name":"FrontCon","url":"https://frontcon.lv","startDate":"2019-04-03","endDate":"2019-04-05","city":"Riga","country":"Latvia","twitter":"@frontcon","cfpUrl":"https://www.papercall.io/fc19","cfpEndDate":"2019-12-09"},{"name":"YGLF Code Camp Israel","url":"https://www.israel.yglfconf.com","startDate":"2019-04-03","endDate":"2019-04-04","city":"Nasholim","country":"Israel","twitter":"@YGLF_IL","cfpUrl":"https://www.israel.yglfconf.com/callforpapers","cfpEndDate":"2019-01-31"},{"name":"App.js Conf","url":"https://appjs.co/","startDate":"2019-04-04","endDate":"2019-04-05","city":"Krakow","country":"Poland","twitter":"@appjsconf","cfpUrl":"https://goo.gl/forms/Pn9LFBDuAGvWJyZf1","cfpEndDate":"2019-02-14"},{"name":"JS Fest","url":"http://jsfest.com.ua/indexe.html","startDate":"2019-04-05","endDate":"2019-04-06","city":"Kyiv","country":"Ukraine","twitter":"@jsfestua","cfpUrl":"http://jsfest.com.ua/speakers_eng.html","cfpEndDate":"2019-02-23"},{"name":"ForwardJS Ottawa","url":"https://forwardjs.com/ottawa","startDate":"2019-04-09","endDate":"2019-04-12","city":"Ottawa","country":"Canada","twitter":"@forwardJS","cfpUrl":"https://bit.ly/2Pv0nBu"},{"name":"Sencha Community Days","url":"https://sencha-community-days.de/","startDate":"2019-04-10","endDate":"2019-04-11","city":"Karlsruhe","country":"Germany","cfpUrl":"https://sencha-community-days.de/cfp/","cfpEndDate":"2019-02-28"},{"name":"JSHeroes","url":"https://jsheroes.io","startDate":"2019-04-11","endDate":"2019-04-12","city":"Cluj-Napoca","country":"Romania","twitter":"@jsheroes","cfpUrl":"https://jsheroes-form.typeform.com/to/IHohur","cfpEndDate":"2018-12-01"},{"name":"ReasonConf","url":"https://www.reason-conf.com/","startDate":"2019-04-11","endDate":"2019-04-13","city":"Vienna","country":"Austria","twitter":"@reasonconf","cfpUrl":"https://www.reason-conf.com/cfp/","cfpEndDate":"2019-01-31"},{"name":"NativeScript Developer Day","url":"https://nativescriptdevday.org","startDate":"2019-04-11","endDate":"2019-04-12","city":"Amsterdam","country":"Netherlands","twitter":"@nativescript","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSf4EP8H5WPY8hHyui7w8EbxzJQeFLkCyevsUO1gvEWHLKirUg/viewform?usp=sf_link","cfpEndDate":"2019-02-01"},{"name":"React Amsterdam","url":"https://react.amsterdam","startDate":"2019-04-12","endDate":"2019-04-12","city":"Amsterdam","country":"Netherlands","twitter":"@reactamsterdam","cfpUrl":"https://goo.gl/forms/WZsgwz8WGvrlPyvH2","cfpEndDate":"2019-01-15"},{"name":"Smashing Conference","url":"https://smashingconf.com/sf-2019/","startDate":"2019-04-16","endDate":"2019-04-17","city":"San Francisco, CA","country":"U.S.A.","twitter":"@smashingconf"},{"name":"React Finland","url":"https://react-finland.fi","startDate":"2019-04-24","endDate":"2019-04-26","city":"Helsinki","country":"Finland","twitter":"@ReactFinland"},{"name":"Elm in the Spring","url":"https://www.elminthespring.org","startDate":"2019-04-26","endDate":"2019-04-26","city":"Chicago","country":"U.S.A.","twitter":"@ElmInTheSpring","cfpUrl":"https://www.papercall.io/elm-in-the-spring-2019","cfpEndDate":"2019-01-31"},{"name":"FrontConf - Munich Frontend Conference","url":"https://frontconf.com","startDate":"2019-04-27","endDate":"2019-04-27","city":"Munich","country":"Germany","twitter":"@FrontMuc"},{"name":"ng-conf","url":"https://www.ng-conf.org","startDate":"2019-05-01","endDate":"2019-05-03","city":"Salt Lake City, UT","country":"U.S.A.","twitter":"@ngconf","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSfYLqvSIckyuhWyIl2NAYWQnSEOz2pXt6VRF1hF9MlBmP7aXw/viewform","cfpEndDate":"2019-01-03"},{"name":"Uphill Conf","url":"https://uphillconf.com","startDate":"2019-05-02","endDate":"2019-05-03","city":"Bern","country":"Switzerland","twitter":"@uphillconf"},{"name":"CityJSConf","url":"http://cityjsconf.org","startDate":"2019-05-03","endDate":"2019-05-03","city":"London","country":"U.K.","twitter":"@cityjsconf","cfpUrl":"https://www.papercall.io/cityjsconf2019","cfpEndDate":"2019-01-31"},{"name":"ReactJS Girls","url":"https://reactjsgirls.com/","startDate":"2019-05-03","endDate":"2019-05-03","city":"London","country":"U.K.","twitter":"@ReactJSgirls","cfpUrl":"https://yld.typeform.com/to/gfZ2jc"},{"name":"JSDay","url":"https://2019.jsday.it","startDate":"2019-05-08","endDate":"2019-05-09","city":"Verona","country":"Italy","twitter":"@jsconfit","cfpUrl":"https://cfp.jsday.it/","cfpEndDate":"2019-02-04"},{"name":"NationJS Frontrunners","url":"http://nationjs.com","startDate":"2019-05-10","endDate":"2019-05-10","city":"Washington, DC","country":"U.S.A.","twitter":"@nationjs","cfpUrl":"https://www.papercall.io/nationjs-frontrunners2019","cfpEndDate":"2019-03-04"},{"name":"International JavaScript Conference","url":"https://javascript-conference.com/en","startDate":"2019-05-13","endDate":"2019-05-15","city":"London","country":"U.K.","twitter":"@JavaScriptCon","cfpUrl":"https://javascript-conference.com/call-for-papers/","cfpEndDate":"2018-10-31"},{"name":"You Gotta Love Frontend","url":"https://www.yougottalovefrontend.com","startDate":"2019-05-16","endDate":"2019-05-17","city":"Vilnius","country":"Lithuania","twitter":"@YGLFConf","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLScop_EaKnLyrgpGN4KiYXAoHmv4_f9vopE1_XIPQalxxdGA9Q/viewform","cfpEndDate":"2019-02-01"},{"name":"FullStack NYC","url":"https://skillsmatter.com/conferences/11077","startDate":"2019-05-16","endDate":"2019-05-17","city":"New York","country":"U.S.A.","twitter":"@skillsmatter","cfpUrl":"https://skillsmatter.com/conferences/11077#get_involved","cfpEndDate":"2018-12-04"},{"name":"Newcrafts","url":"http://ncrafts.io","startDate":"2019-05-16","endDate":"2019-05-17","city":"Paris","country":"France","twitter":"@ncraftsconf","cfpUrl":"http://cfp.ncrafts.io","cfpEndDate":"2019-03-03"},{"name":"Frontend United","url":"https://www.frontendunited.org","startDate":"2019-05-17","endDate":"2019-05-18","city":"Utrecht","country":"Netherlands","twitter":"@frontendunited"},{"name":"ReactEurope","url":"https://www.react-europe.org","startDate":"2019-05-23","endDate":"2019-05-24","city":"Paris","country":"France","twitter":"@ReactEurope"},{"name":"HolyJS Piter","url":"https://holyjs-piter.ru/en","startDate":"2019-05-24","endDate":"2019-05-25","city":"Saint Petersburg","country":"Russia","twitter":"@HolyJSconf","cfpUrl":"https://holyjs-piter.ru/en/callforpapers/"},{"name":"ngVikings","url":"https://ngvikings.org/","startDate":"2019-05-27","endDate":"2019-05-28","city":"Copenhagen","country":"Denmark","twitter":"@ngVikingsConf","cfpUrl":"https://t.co/CuvkTq68uO","cfpEndDate":"2019-01-31"},{"name":"JSNation","url":"http://amsterdamjs.com","startDate":"2019-05-31","endDate":"2019-06-01","city":"Amsterdam","country":"Netherlands","twitter":"@amsterdamjs","cfpUrl":"https://docs.google.com/forms/d/1whCnyZBqnVNli41Wk0wJh53jSL6topRm_uWMPyNCkPk/edit?usp=sharing","cfpEndDate":"2019-03-31"},{"name":"JSConf EU","url":"https://2019.jsconf.eu","startDate":"2019-06-01","endDate":"2019-06-02","city":"Berlin","country":"Germany","twitter":"@jsconfeu","cfpUrl":"https://2019.jsconf.eu/call-for-speakers/","cfpEndDate":"2018-12-23"},{"name":"Pixel Pioneers Belfast","url":"https://pixelpioneers.co","city":"Belfast","country":"U.K.","startDate":"2019-06-07","endDate":"2019-06-07","cfpUrl":"https://pixelpioneers.co/call-for-speakers"},{"name":"ReactNext","url":"https://react-next.com/","startDate":"2019-06-11","endDate":"2019-06-11","city":"Tel Aviv","country":"Israel","twitter":"@ReactNext","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSd5XH8lFRAIR4Yb5GmcmfBSDe-RQWB6XVOK46NFwYL-7I4BlQ/viewform","cfpEndDate":"2019-03-15"},{"name":"React Day Norway","url":"https://reactnorway.com/","startDate":"2019-06-12","endDate":"2019-06-12","city":"Larvik","country":"Norway","twitter":"@reactnorway","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSe2d6XhxZvIQS3MBUzS5faInvhzbHPdHPqT7nVZV0jHl2c8Ag/viewform","cfpEndDate":"2019-06-01"},{"name":"JSConf.Asia","url":"https://2019.jsconf.asia","startDate":"2019-06-14","endDate":"2019-06-16","city":"Singapore","country":"Singapore","twitter":"@jsconfasia","cfpUrl":"https://contribute.jsconf.asia/"},{"name":"Berlin Buzzwords","url":"https://berlinbuzzwords.de","startDate":"2019-06-16","endDate":"2019-06-18","city":"Berlin","country":"Germany","twitter":"@berlinbuzzwords"},{"name":"NodeConf Colombia","url":"https://colombia.nodeconf.com/","startDate":"2019-06-21","endDate":"2019-06-22","city":"Medellín","country":"Colombia","twitter":"@NodeConfCo","cfpUrl":"https://cfp.nodeconf.co/","cfpEndDate":"2019-02-28"},{"name":"enterJS","url":"https://www.enterjs.de/index.php","startDate":"2019-06-25","endDate":"2019-06-28","city":"Darmstadt","country":"Germany","twitter":"@enterjsconf","cfpUrl":"https://www.enterjs.de/call-for-proposals-en","cfpEndDate":"2019-01-14"},{"name":"Smashing Conference","url":"https://smashingconf.com/toronto-2019/","startDate":"2019-06-25","endDate":"2019-06-26","city":"Toronto","country":"Canada","twitter":"@smashingconf"},{"name":"ngSpain","url":"https://www.ngspain.com","startDate":"2019-06-28","endDate":"2019-06-30","city":"Madrid","country":"Spain","twitter":"@ngspain"},{"name":"FullStack London","url":"https://skillsmatter.com/conferences/11213-fullstack-london-2019-the-conference-on-javascript-node-and-internet-of-things","startDate":"2019-07-10","endDate":"2019-07-12","city":"London","country":"U.K.","twitter":"@skillsmatter","cfpUrl":"https://skillsmatter.com/conferences/11213-fullstack-london-2019-the-conference-on-javascript-node-and-internet-of-things#get_involved","cfpEndDate":"2019-02-28"},{"name":"Chain React","url":"https://infinite.red/ChainReactConf","startDate":"2019-07-11","endDate":"2019-07-12","twitter":"@ChainReactConf","city":"Portland, OR","country":"U.S.A.","cfpUrl":"https://sessionize.com/chain-react-2019","cfpEndDate":"2019-03-01"},{"name":"JSCamp Barcelona","url":"https://jscamp.tech","startDate":"2019-07-18","endDate":"2019-07-19","city":"Barcelona","country":"Spain","twitter":"@jscamp"},{"name":"OdessaJS","url":"http://odessajs.org/","startDate":"2019-07-20","endDate":"2019-07-21","city":"Odessa","country":"Ukraine","twitter":"@OdessaJS","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSeQqU4iM-vBx6VRWHQcE1zKh3LW4KZ5231Oe0dQx-neBrrc3g/viewform","cfpEndDate":"2019-03-30"},{"name":"JavaScript and Friends Conference","url":"https://www.javascriptandfriends.com","startDate":"2019-08-02","endDate":"2019-08-02","city":"Columbus","country":"U.S.A.","twitter":"@JSFriendsConf","cfpUrl":"https://sessionize.com/javascript-and-friends-conference/","cfpEndDate":"2019-04-11"},{"name":"JSConf US","url":"https://2019.jsconf.us/","startDate":"2019-08-11","endDate":"2019-08-14","city":"Carlsbad, CA","country":"U.S.A.","twitter":"@jsconfus","cfpUrl":"https://2019.jsconf.us/call-for-proposals/","cfpEndDate":"2019-03-01"},{"name":"React India","url":"https://www.reactindia.io/","startDate":"2019-08-23","endDate":"2019-08-25","city":"Goa","country":"India","twitter":"@react_india"},{"name":"Frontend Conference Zurich","url":"https://www.frontendconf.ch","startDate":"2019-08-29","endDate":"2019-08-30","city":"Zurich","country":"Switzerland","twitter":"@frontendconfch","cfpUrl":"https://frontendconf.ch/call-for-speakers","cfpEndDate":"2019-04-30"},{"name":"NG-DE","url":"https://ng-de.org","startDate":"2019-08-30","endDate":"2019-08-31","city":"Berlin","country":"Germany","twitter":"@ngdeconf"},{"name":"ComponentsConf","url":"https://www.componentsconf.com.au","startDate":"2019-09-06","endDate":"2019-09-06","city":"Melbourne","country":"Australia","twitter":"@componentsConf","cfpUrl":"https://goo.gl/forms/wSXvPfR11VsdD3Ao2","cfpEndDate":"2019-04-06"},{"name":"Smashing Conference","url":"https://smashingconf.com/freiburg-2019/","startDate":"2019-09-09","endDate":"2019-09-10","city":"Freiburg","country":"Germany","twitter":"@smashingconf"},{"name":"Smashing Conference","url":"https://smashingconf.com/ny-2019/","startDate":"2019-09-15","endDate":"2019-10-16","city":"New York","country":"U.S.A.","twitter":"@smashingconf"},{"name":"JSConf Budapest","url":"https://jsconfbp.com/","startDate":"2019-09-26","endDate":"2019-09-27","city":"Budapest","country":"Hungary","twitter":"@jsconfbp","cfpUrl":"https://docs.google.com/forms/d/e/1FAIpQLSeox5OTuhXmrLXhWtLAcj4AFfpKj9kiv0B17A1rhEU0Qy3xrQ/viewform","cfpEndDate":"2019-02-28"},{"name":"Nordic.js","url":"http://nordicjs.com","startDate":"2019-10-10","endDate":"2019-10-11","city":"Stockholm","country":"Sweden","twitter":"@nordicjs","cfpUrl":"http://nordicjs.com/call-for-speakers"},{"name":"Big Data LDN","url":"https://bigdataldn.com","startDate":"2019-11-13","endDate":"2019-11-14","city":"London","country":"U.K.","twitter":"@bigdata_ldn"},{"name":"dotJS","url":"https://2019.dotjs.io","startDate":"2019-12-05","endDate":"2019-12-06","city":"Paris","country":"France","twitter":"@dotJS"}]
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "Calendar.png?5ab7a9aa44bd1d68175869dc86475df6";
+
+/***/ }),
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},_vm._l((_vm.list),function(conf){return _c('Conf',{attrs:{"conf":conf}})}),1)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('h1',[_vm._v("JavaScript конференции 2019")]),_vm._v(" "),_c('div',{staticClass:"navigation"},[_c('button',{staticClass:"back",on:{"click":_vm.back}},[_vm._v("\n      <\n    ")]),_vm._v(" "),_c('div',{staticClass:"current"},[_vm._v("\n      "+_vm._s(_vm.start + 1)+"\n    ")]),_vm._v(" "),_c('button',{staticClass:"next",on:{"click":_vm.next}},[_vm._v("\n      >\n    ")])]),_vm._v(" "),_c('div',{staticClass:"conferencies"},_vm._l((_vm.listShow),function(conf){return _c('Conf',{key:JSON.stringify(conf),attrs:{"conf":conf}})}),1)])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);

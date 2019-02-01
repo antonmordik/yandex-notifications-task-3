@@ -3,7 +3,8 @@ const files = [
   './',
   './index.html',
   './dist/build.js',
-  './dist/build.js.map'
+  './dist/build.js.map',
+  './dist/Calendar.png'
   ];
 
 self.addEventListener('install', event => {
@@ -40,7 +41,6 @@ self.addEventListener('fetch', event => {
         console.log('found in cache');
         return cacheResponse;
       }
-
       fetch(event.request)
     })
   );

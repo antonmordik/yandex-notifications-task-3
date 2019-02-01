@@ -1,25 +1,30 @@
 <template>
   <div class="conf">
-    <div class="conf__title">
-      {{ conf.title }}
+    <h3 class="name">
+      {{ conf.name }}
+    </h3>
+    <p class="date">
+      {{ dateView }}
+    </p>
+    <div class="link">
+      <a :href="conf.url" target="_blank">{{ conf.url }}</a>
     </div>
-    <div class="conf__desc">
-      {{ conf.description }}
+    <p class="place">
+      {{ conf.country }}, {{ conf.city }}
+    </p>
+    <div class="allerts">
+      Напомнить:
+      <button class="allerts_btn" @click="notify(3)">
+        за 3 дня
+      </button>
+      <button class="allerts_btn" @click="notify(7)">
+        за 7 дней
+      </button>
+      <button class="allerts_btn" @click="notify(14)">
+        за 14 дней
+      </button>
     </div>
-    <div class="conf__date">
-      <p>
-        {{ dateView }}
-      </p>
-    </div>
-    <button class="icon">
-      3d
-    </button>
-    <button class="icon">
-      7d
-    </button>
-    <button class="icon">
-      14d
-    </button>
+    
   </div>
 </template>
 
@@ -29,8 +34,43 @@ export default {
   props: ['conf'],
   computed: {
     dateView() {
-      const [d, m, y] = this.conf.date.split('-');
-      return `${d}/${(parseInt(m) + 1)}/${y}`
+      const [y, m, d] = this.conf.startDate.split('-');
+      return `${d}/${m}/${y}`
+    }
+  },
+  methods: {
+    notify(amount) {
+      let [y, m,d] = this.conf.startDate.split('-');
+      const day = new Date(y, `${m - 1}`, `${d - amount}`);
+      const dayStr = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+      const data = {
+        name: this.conf.name,
+        country: this.conf.country,
+        city: this.conf.city,
+        date: this.dateView
+      };
+      let check = true;
+      let notifications = localStorage.getItem('notifications');
+      if (!notifications) {
+        notifications = {};
+      } else {
+        notifications = JSON.parse(notifications);
+      }
+      if (!notifications[dayStr]) {
+        notifications[dayStr] = [];
+      } else {
+        notifications[dayStr].forEach(el => {
+          const temp = JSON.stringify(el);
+          if (temp === JSON.stringify(data)) {
+            check = false;
+          }
+        });
+        
+      }
+      if (check) {
+        notifications[dayStr].push(data);
+      }
+      localStorage.setItem('notifications', JSON.stringify(notifications));
     }
   }
 }
@@ -38,43 +78,30 @@ export default {
 
 <style>
 .conf {
-  width: 700px;
-  display: grid;
-  grid-template-columns: 1fr 52px 52px 52px;
+  width: 500px;
   margin-bottom: 20px;
-}
-
-.conf__title {
-  background-color: #9abd97;
-  grid-column: 1/5;
-  padding: 15px;
-}
-
-.conf__desc {
-  background-color: #b6d7b9;
-  grid-column: 1/5;
-  padding: 15px;
-}
-
-.conf__date {
-  background-color: #d0f1bf;
   display: grid;
+  grid-template-columns: 400px 100px;
+}
+.link, .place {
+  grid-column: 1/3;
 }
 
-.conf__date p {
-  align-self: center;
-  padding-left: 15px;
+.allerts {
+  font-size: 14px;
 }
 
-.icon {
-  background-color: #d0f1bf;
+.allerts_btn {
   border: none;
-  width: 52px;
-  height: 52px;
+  padding: 5px 10px;
   cursor: pointer;
+  background-color: #ED1E79;
+  color: #FFF;
+  font-size: 14px;
 }
 
-.icon:hover {
-  background-color: #b6d7b9;
+.allerts_btn:hover {
+  color: #2c3e50;
 }
+
 </style>
