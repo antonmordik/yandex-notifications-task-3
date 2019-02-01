@@ -12241,7 +12241,7 @@ process.umask = function() { return 0; };
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(4);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bab39c96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7312bec7_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(21);
 function injectStyle (ssrContext) {
   __webpack_require__(12)
 }
@@ -12261,7 +12261,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bab39c96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7312bec7_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -12282,7 +12282,7 @@ var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("b894f54a", content, true, {});
+var update = __webpack_require__(2)("5af1b184", content, true, {});
 
 /***/ }),
 /* 13 */
@@ -12290,7 +12290,7 @@ var update = __webpack_require__(2)("b894f54a", content, true, {});
 
 exports = module.exports = __webpack_require__(1)(false);
 // imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Roboto);", ""]);
+
 
 // module
 exports.push([module.i, "*{padding:0;margin:0;outline:none}#app{font-family:Avenir,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#2c3e50;margin:auto;margin-top:20px;display:grid;width:500px;grid-template-columns:1fr}.navigation{width:150px;height:50px;display:grid;grid-template-columns:repeat(3,50px);margin:auto}a{color:#ed1e79}h1{text-align:center}.back,.next{cursor:pointer;background-color:#fff;border:none}.back,.current,.next{align-self:center;justify-self:center;padding:10px 12px}.back:hover,.next:hover{background-color:#ed1e79}", ""]);
@@ -12422,7 +12422,7 @@ module.exports = __webpack_require__.p + "Calendar.png?5ab7a9aa44bd1d68175869dc8
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('h1',[_vm._v("JavaScript конференции 2019")]),_vm._v(" "),_c('div',{staticClass:"navigation"},[_c('button',{staticClass:"back",on:{"click":_vm.back}},[_vm._v("\n      <\n    ")]),_vm._v(" "),_c('div',{staticClass:"current"},[_vm._v("\n      "+_vm._s(_vm.start + 1)+"\n    ")]),_vm._v(" "),_c('button',{staticClass:"next",on:{"click":_vm.next}},[_vm._v("\n      >\n    ")])]),_vm._v(" "),_c('div',{staticClass:"conferencies"},_vm._l((_vm.listShow),function(conf){return _c('Conf',{key:JSON.stringify(conf),attrs:{"conf":conf}})}),1)])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"app"}},[_c('h1',[_vm._v("JavaScript конференции 2019")]),_vm._v(" "),_c('div',{staticClass:"navigation"},[_c('button',{staticClass:"back",on:{"click":_vm.back}},[_vm._v("\n      <\n    ")]),_vm._v(" "),_c('div',{staticClass:"current"},[_vm._v("\n      "+_vm._s(_vm.start + 1)+"\n    ")]),_vm._v(" "),_c('button',{staticClass:"next",on:{"click":_vm.next}},[_vm._v("\n      >\n    ")])]),_vm._v(" "),_c('div',{staticClass:"conferences"},_vm._l((_vm.listShow),function(conf){return _c('Conf',{key:JSON.stringify(conf),attrs:{"conf":conf}})}),1)])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
