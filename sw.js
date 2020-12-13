@@ -1,10 +1,10 @@
 const version = 'v1';
 const files = [
   './',
+  './favicon.ico',
   './index.html',
-  './dist/build.js',
-  './dist/build.js.map',
-  './dist/Calendar.png'
+  './dist/main.js',
+  './dist/assets/Calendar.png'
   ];
 
 self.addEventListener('install', event => {

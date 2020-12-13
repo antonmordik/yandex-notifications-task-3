@@ -1,9 +1,6 @@
-import Vue from 'vue'
-Vue.config.devtools = true
-
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
 
 new Vue({
-  el: '#app',
   render: h => h(App)
-})
+}).$mount('#app');

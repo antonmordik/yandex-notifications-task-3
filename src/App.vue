@@ -77,7 +77,6 @@ export default {
     }
     else if (Notification.permission === 'granted') {
       this.list = events;
-      this.list = this.list.filter(el => new Date() < new Date(el.startDate.split('-')));
       const now = new Date();
       const nowStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
       let notifications = localStorage.getItem('notifications');
@@ -101,7 +100,6 @@ export default {
     else if (Notification.permission !== 'denied' || Notification.permission === 'default') {
       Notification.requestPermission();
       this.list = events;
-      this.list = this.list.filter(el => new Date() < new Date(el.startDate.split('-')));
     }  
   }
 }
